@@ -9,6 +9,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -20,13 +21,15 @@ class AuthController extends Controller
                 return $this->errorResponse('User Already register', 400);
             } else {
                 $user = User::create([
-                    'name' => $request->name,
+                    'user_name' => $request->name,
                     'phone' => $request->phone,
                     'role' => 'student',
                     'collage_id' => $request->collage_id,
                 ]);
                 $data['id'] = $user->uuid;
-                $data['name'] = $user->name;
+                $data['user_name'] = $user->name;
+
+                // create code for login 
 
                 return $this->successResponse($data, "Registerd Successfully", 201);
             }
