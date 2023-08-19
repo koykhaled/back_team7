@@ -14,7 +14,8 @@ class Code extends Model
 
     protected $fillable = [
         'uuid',
-        'code'
+        'code',
+        'college_id'
     ];
 
     protected static function boot()
