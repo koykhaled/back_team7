@@ -12,6 +12,7 @@ use App\Models\College;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -24,11 +25,13 @@ class AuthController extends Controller
             } else {
                 $user = User::create([
                     'user_name' => $request->user_name,
+
                     'phone' => $request->phone,
                     'role' => 'student',
                 ]);
                 $data['id'] = $user->uuid;
                 $data['name'] = $user->user_name;
+
 
                 $college=College::where("uuid",$request->college_id)->first();
                 do{
