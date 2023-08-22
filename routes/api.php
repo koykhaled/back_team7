@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CollegeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +35,6 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth', 'prefix' => 'auth'], function () {
 });
+
+Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
+Route::get('colleges', [CollegeController::class, 'index'])->name('college.index');
