@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
         return [
             'user_name' => 'required|string|max:255',
             'phone' => 'required|string|max:10',
-            'college_id' => 'required'
+            // 'college_id' => 'required'
         ];
     }
 }
