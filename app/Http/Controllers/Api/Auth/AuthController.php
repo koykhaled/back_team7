@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Events\app\Events\RegisterEvent;
 use App\Http\Controllers\Api\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
@@ -53,8 +52,8 @@ class AuthController extends Controller
             $user = User::where('user_name', $request->user_name)->first();
             $code = Code::where('code', $request->code)->first();
 
-            if (!$code and !$user) {
-                return $this->errorResponse('user_name or code incorrect', 404);
+            if (!$code or !$user) {
+                throw new Exception('User or Code Incorrect');
             } else {
                 $token = $code->createToken($user->user_name . "_token")->plainTextToken;
                 $college = College::find($code->college_id);
@@ -72,8 +71,9 @@ class AuthController extends Controller
     public function logout()
     {
         try {
-            $code = User::where('id', Auth::id());
-            // $code->tokens()->delete();
+            // $code = Code::where('user_id', Auth::id())->first();
+            $code = Auth::user();
+            $code->tokens()->delete();
             return $this->successResponse($code, 'Logout Done', 200);
         } catch (\Throwable $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);

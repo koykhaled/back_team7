@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('user_name');
             $table->string('phone')->unique();
             $table->string('role');
+            $table->string('photo');
             $table->rememberToken();
             $table->timestamps();
         });

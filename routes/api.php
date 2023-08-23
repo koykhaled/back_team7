@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CollegeController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,10 +31,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
-    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'auth'], function () {
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('profile/{id}', [ProfileController::class, 'update']);
 });
 
 Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
