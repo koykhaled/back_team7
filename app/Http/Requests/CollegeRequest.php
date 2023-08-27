@@ -25,8 +25,7 @@ class CollegeRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'logo' => 'required|string',
-            'category_id'=>'required'
+            'logo' => 'required',
         ];
     }
 }

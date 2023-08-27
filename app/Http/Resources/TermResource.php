@@ -15,10 +15,11 @@ class TermResource extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
-        return[
-   'id' => $this->uuid,
-   'name'=> $this->name,
-   'college_id'=> $this->college_id
+        return [
+            'id' => $this->uuid,
+            'term_name' => $this->name,
+            'type' => $this->type
         ];
     }
 }
+

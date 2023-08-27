@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
-    use  HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,14 +56,14 @@ class User extends Authenticatable
         });
     }
 
-    public function codes(): HasMany
+    public function code(): HasMany
     {
         return $this->hasMany(Code::class);
     }
 
-    public function collage(): BelongsTo
+    public function college(): BelongsTo
     {
-        return $this->belongsTo(Collage::class);
+        return $this->belongsTo(College::class);
     }
 
     public function questions(): BelongsToMany

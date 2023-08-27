@@ -16,6 +16,7 @@ class Question extends Model
     protected $fillable = [
         'content',
         'reference',
+        'college_id'
     ];
 
     protected static function boot()
@@ -31,16 +32,25 @@ class Question extends Model
     {
         return $this->belongsToMany(User::class, 'importants', 'question_id');
     }
+
     public function choices(): BelongsToMany
     {
         return $this->belongsToMany(Choice::class, 'question_choices', 'question_id');
     }
+
     public function terms(): BelongsToMany
     {
         return $this->belongsToMany(Term::class, 'term_questions', 'question_id');
     }
+
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+
+    public function college(): BelongsTo
+    {
+        return $this->belongsTo(College::class);
     }
 }

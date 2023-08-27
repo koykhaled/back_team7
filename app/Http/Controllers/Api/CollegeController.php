@@ -7,11 +7,12 @@ use App\Http\Requests\CollegeRequest;
 use App\Http\Resources\CollegeResource;
 use App\Models\Category;
 use App\Models\College;
+use Exception;
 use Illuminate\Http\Request;
 
 class CollegeController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, UploadImage;
     /**
      * Display a listing of the resource.
      *
@@ -21,19 +22,10 @@ class CollegeController extends Controller
     {
         try {
             $colleges = CollegeResource::collection(College::all());
-            return $this->successResponse($colleges, "all colleges");
+            return $this->successResponse($colleges, "all colleges", 200);
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
     }
 
     /**
@@ -42,40 +34,23 @@ class CollegeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CollegeRequest $request)
+    public function store(CollegeRequest $request, $id)
     {
         try {
-            $category = Category::where('uuid', $request->category_id)->first();
-            $category->colleges()->create([
-                'name' => $request->name,
-                'logo' => $request->logo,
-            ]);
-            return $this->successResponse('collage created successfuly', 201);
+            $category = Category::where('uuid', $id)->first();
+            if ($category) {
+                $college = $category->colleges()->create([
+                    'name' => $request->name
+                ]);
+                $this->uploadImage($request, 'logo', $college, 'CollegeLogo/');
+                $college->save();
+                return $this->successResponse($college, 'collage created successfuly', 201);
+            } else {
+                throw new Exception("Category Not Found");
+            }
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -89,12 +64,11 @@ class CollegeController extends Controller
     {
         try {
             $college = College::where('uuid', $uuid)->get();
-            $college->update([
-                'name' => $request->name,
-                'logo' => $request->logo
-            ]);
-
-            return $this->successResponse('the college updated successfuly');
+            $college->name = $request->name ?? $college->name;
+            $this->deletePhoto($college->logo);
+            $this->uploadImage($request, 'logo', $college, 'CollegeLogo/');
+            $college->save();
+            return $this->successResponse($college, 'the college updated successfuly', 200);
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
@@ -110,8 +84,9 @@ class CollegeController extends Controller
     {
         try {
             $college = College::where('uuid', $uuid)->get();
-            $college->delete($college->id);
-            return $this->successResponse("the category deleted successfully");
+            $college->delete();
+            $this->deletePhoto($college->logo);
+            return $this->successResponse(null, "the category deleted successfully", 200);
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }

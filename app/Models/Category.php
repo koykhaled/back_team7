@@ -26,8 +26,8 @@ class Category extends Model
     }
 
 
-    public function collages(): HasMany
+    public function colleges(): HasMany
     {
-        return $this->hasMany(Collage::class);
+        return $this->hasMany(College::class);
     }
 }

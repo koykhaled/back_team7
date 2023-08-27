@@ -15,6 +15,7 @@ class Term extends Model
 
     protected $fillable = [
         'name',
+        'type'
     ];
 
     protected static function boot()
