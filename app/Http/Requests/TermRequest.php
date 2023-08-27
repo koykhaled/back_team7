@@ -24,8 +24,14 @@ class TermRequest extends FormRequest
     public function rules()
     {
         return [
+
             'name' => 'required|string',
             'type' => 'required'
+        ];
+    }
+}
+          'name'=> 'required|string' ,
+          'college_id' => 'required'
         ];
     }
 }
