@@ -58,7 +58,7 @@ class AuthController extends Controller
                 $token = $code->createToken($user->user_name . "_token")->plainTextToken;
                 $college = College::find($code->college_id);
                 $success['token'] = $token;
-                $success['name'] = $user->user_name;
+                $success['user_name'] = $user->user_name;
                 $success['college_name'] = $college->name;
                 $success['college_id'] = $college->uuid;
                 return $this->successResponse($success, 'login success', 200);

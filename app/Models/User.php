@@ -61,9 +61,9 @@ class User extends Authenticatable
         return $this->hasMany(Code::class);
     }
 
-    public function collage(): BelongsTo
+    public function college(): BelongsTo
     {
-        return $this->belongsTo(Collage::class);
+        return $this->belongsTo(College::class);
     }
 
     public function questions(): BelongsToMany

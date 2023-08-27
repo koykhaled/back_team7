@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\File;
+
 trait UploadImage
 {
     /**
@@ -30,10 +32,21 @@ trait UploadImage
                 $file->move($path, $file_name);
                 file_put_contents($file_full_name, $photo64);
 
-                $data->photo = $file_full_name;
+                $data->$input = $file_full_name;
             }
         } catch (\Throwable $th) {
             return $th->getMessage();
+        }
+    }
+
+    public function deletePhoto($file_name)
+    {
+
+        if (File::exists($file_name)) {
+            File::delete($file_name);
+            return true;
+        } else {
+            return false;
         }
     }
 }

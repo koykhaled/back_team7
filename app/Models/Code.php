@@ -37,8 +37,8 @@ class Code extends Authenticatable
         return $this->belongsTo(User::class);
     }
 
-    public function collage(): BelongsTo
+    public function college(): BelongsTo
     {
-        return $this->belongsTo(Collage::class);
+        return $this->belongsTo(College::class);
     }
 }

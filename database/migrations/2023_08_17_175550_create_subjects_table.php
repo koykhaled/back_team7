@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name');
+            $table->string('type')->nullable();
             $table->foreignId('college_id')->constrained('colleges')->cascadeOnDelete();
             $table->timestamps();
         });

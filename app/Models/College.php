@@ -46,6 +46,11 @@ class College extends Model
         return $this->hasMany(Code::class);
     }
 
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Code::class);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

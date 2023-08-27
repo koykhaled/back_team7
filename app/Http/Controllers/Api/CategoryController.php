@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, UploadImage;
     /**
      * Display a listing of the resource.
      *
@@ -26,14 +27,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -44,36 +37,16 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         try {
-            $category = Category::create([
-                'name' => $request->name,
-                'logo' => $request->logo
-            ]);
+            $category = new Category();
+            $category->name = $request->name;
+            $this->uploadImage($request, 'logo', $category, 'CategoryLogo/');
+            $category->save();
             return $this->successResponse("category created successfuly!", 201);
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -85,13 +58,15 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, $uuid)
     {
         try {
-            $category = Category::where('uuid', $uuid)->get();
-            $category->update([
-                'name' => $request->name,
-                'logo' => $request->logo
-            ]);
-
-            return $this->successResponse('the category updated successfuly');
+            $category = Category::where('uuid', $uuid)->fisrt();
+            if ($category) {
+                $category->name = $request->name ?? $category->name;
+                $this->uploadImage($request, 'logo', $category, 'CategoryLogo/');
+                $category->save();
+                return $this->successResponse('the category updated successfuly');
+            } else {
+                throw new Exception("Category Not Found");
+            }
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
@@ -104,12 +79,17 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($uuid)
+    public function destroy($id)
     {
         try {
-            $category = Category::where('uuid', $uuid)->get();
-            $category->delete($category->id);
-            return $this->successResponse("the category deleted successfully");
+            $category = Category::where('uuid', $id)->first();
+            if ($category) {
+                $category->delete($category->id);
+                $this->deletePhoto($category->logo);
+                return $this->successResponse(null, "the category deleted successfully", 200);
+            } else {
+                throw new Exception("Category Not Found");
+            }
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }

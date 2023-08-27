@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('content');
             $table->string('reference');
             $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+            $table->foreignId('college_id')->constrained('college')->cascadeOnDelete();
             $table->timestamps();
         });
     }
