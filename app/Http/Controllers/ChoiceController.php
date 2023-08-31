@@ -21,10 +21,10 @@ class ChoiceController extends Controller
             //code...
             $question_id = Question::where('uuid', $id)->first();
             $choices = ChoiceResource::collection($question_id->choices()->get());
-            return $this->successResponce($choices, 'all choices', 200);
+            return $this->successResponse($choices, 'all choices', 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ class ChoiceController extends Controller
             return $this->successResponse($choice, 'choice created successfuly', 201);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ class ChoiceController extends Controller
             return $this->successResponse($choice, 'choice update successfuly', 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage());
         }
     }
 
