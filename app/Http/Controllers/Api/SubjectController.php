@@ -7,7 +7,6 @@ use App\Http\Requests\SubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Models\College;
 use App\Models\Subject;
-use Illuminate\Support\Arr;
 
 class SubjectController extends Controller
 {
@@ -26,9 +25,6 @@ class SubjectController extends Controller
         } catch (\Throwable $th) {
             return $this->errorResponse("Error . " . $th->getMessage(), 400);
         }
-        // // $questionIds = Subject::pluck('id')->toArray();
-        // // $randomQuestionIds = Arr::random($questionIds, 3);
-        // $questions = Subject::inRandomOrder()->limit(2)->get();
     }
 
     /**

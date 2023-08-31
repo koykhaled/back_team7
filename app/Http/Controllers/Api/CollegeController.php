@@ -63,7 +63,7 @@ class CollegeController extends Controller
     public function update(Request $request, $uuid)
     {
         try {
-            $college = College::where('uuid', $uuid)->get();
+            $college = College::where('uuid', $uuid)->first();
             $college->name = $request->name ?? $college->name;
             $this->deletePhoto($college->logo);
             $this->uploadImage($request, 'logo', $college, 'CollegeLogo/');

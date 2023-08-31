@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\ApiResponse;
 use App\Http\Resources\ChoiceResource;
 use App\Models\Choice;
 use App\Models\Question;
@@ -9,22 +10,22 @@ use Illuminate\Http\Request;
 
 class ChoiceController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($choice_id)
     {
         //
         try {
-            //code...
-            $question_id = Question::where('uuid', $id)->first();
+            $question_id = Question::where('uuid', $choice_id)->first();
             $choices = ChoiceResource::collection($question_id->choices()->get());
             return $this->successResponce($choices, 'all choices', 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage(), 500);
         }
     }
 
@@ -34,20 +35,21 @@ class ChoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request, $question_id)
     {
         //
         try {
             //code...
-            $question = Question::where('uuid', $id)->first();
+            $question = Question::where('uuid', $question_id)->first();
             $choice = Choice::create([
                 'content' => $request->content
             ]);
-            $question->choices()->attach($choice->id);
-            return $this->successResponse($choice, 'choice created successfuly', 201);
+            $status = $request->status == 'true' ? 1 : 0;
+            $question->choices()->attach($choice->id, ['status' => $status]);
+            return $this->successResponse($question->choices()->get(), 'choice created successfuly', 201);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage());
         }
     }
 

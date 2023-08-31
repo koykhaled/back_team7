@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\QuestionRequest;
 use App\Http\Resources\QuestionResource;
-use App\Models\College;
 use App\Models\Question;
 use App\Models\Subject;
 use App\Models\Term;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
@@ -20,22 +20,32 @@ class QuestionController extends Controller
 
         try {
 
-            if ($request->has('subject')) {
-                $subject = Subject::where('uuid', $request->subject)->first();
-                $questions = QuestionResource::collection($subject->questions()->inRandomOrder()->limit(50)->get());
-            } elseif ($request->has('term')) {
-                $term = Term::where('uuid', $request->term)->first();
-                $questions = QuestionResource::collection($term->questions()->inRandomOrder()->limit(50)->get());
+            if ($subject = Subject::where('uuid', $request->subject_id)->first()) {
+                $questions = ($subject->questions()
+                    ->inRandomOrder()->limit(50)->get());
+            } elseif ($term = Term::where('uuid', $request->term_id)->first()) {
+                $questions = ($term->questions()->inRandomOrder()->limit(50)->get());
             } else {
-                $questions = Question::where('college_id', Auth::user()->college_id)->inRandomOrder()->limit(50)->get();
+                if (!Auth::user()) {
+                    throw new Exception("Please Sign In to get Questions");
+                } else {
+                    $questions = (Question::where('college_id', Auth::user()->college_id)
+                        ->inRandomOrder()
+                        ->limit(50)->get());
+                }
             }
-            return $this->successResponse($questions, 'all questions', 200);
+            foreach ($questions as $question) {
+                $subject = Subject::find($question->subject_id);
+                $choices = $question->choices()->inRandomOrder()->get();
+                $question['subject_name'] = $subject->name;
+                $question['choices'] = $choices;
+            }
+            return $this->successResponse(QuestionResource::collection($questions), 'all questions', 200);
         } catch (\Throwable $th) {
             //throw $th;
             return $this->errorResponse("Error." . $th->getMessage(), 500);
         }
     }
-
 
 
     public function store(Request $request, $id)

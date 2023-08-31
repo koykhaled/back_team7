@@ -35,7 +35,7 @@ class Question extends Model
 
     public function choices(): BelongsToMany
     {
-        return $this->belongsToMany(Choice::class, 'question_choices', 'question_id');
+        return $this->belongsToMany(Choice::class, 'question_choices', 'question_id')->withPivot('status');
     }
 
     public function terms(): BelongsToMany
