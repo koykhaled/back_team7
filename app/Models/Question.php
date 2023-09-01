@@ -16,7 +16,8 @@ class Question extends Model
     protected $fillable = [
         'content',
         'reference',
-        'college_id'
+        'college_id',
+        'term_id'
     ];
 
     protected static function boot()
@@ -38,9 +39,9 @@ class Question extends Model
         return $this->belongsToMany(Choice::class, 'question_choices', 'question_id')->withPivot('status');
     }
 
-    public function terms(): BelongsToMany
+    public function term(): BelongsTo
     {
-        return $this->belongsToMany(Term::class, 'term_questions', 'question_id');
+        return $this->belongsTo(Term::class);
     }
 
     public function subject(): BelongsTo

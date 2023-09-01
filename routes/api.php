@@ -85,8 +85,10 @@ Route::get('terms/{college_id}', [TermController::class, 'index'])->name('subjec
 | Questions Routes
 |--------------------------------------------------------------------------
 */
+Route::get('questions/{id}', [QuestionController::class, 'index'])->name('questions.index');
+Route::get('questions-answers/', [QuestionController::class, 'correctQuestions'])->name('questions.answres');
+Route::get('subject-questions/{id}', [QuestionController::class, 'subjectQuestions'])->name('questions.subject.term');
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('questions/', [QuestionController::class, 'index'])->name('questions.index');
 
     Route::get('important-questions', [ImportantQuestionController::class, 'getImportantQuestions'])->name('important');
     Route::post('important-questions', [ImportantQuestionController::class, 'store'])->name('importants.store');

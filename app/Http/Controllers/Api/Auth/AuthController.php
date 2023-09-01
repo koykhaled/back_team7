@@ -58,6 +58,8 @@ class AuthController extends Controller
                 $college = College::find($code->college_id);
                 $success['id'] = $user->uuid;
                 $success['user_name'] = $user->user_name;
+                $success['phone'] = $user->phone;
+                $success['photo'] = $user->photo;
                 $success['college_name'] = $college->name;
                 $success['college_id'] = $college->uuid;
                 $success['token'] = $token;
