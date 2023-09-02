@@ -49,9 +49,9 @@ class AuthController extends Controller
     {
         try {
             $code = Code::where('code', $request->code)->first();
-            $user = User::where('id', $code->user_id)->first();
+            $user = User::where('user_name', $request->user_name)->first();
 
-            if (!$code or ($user->user_name != $request->user_name)) {
+            if (!$code or !$user) {
                 throw new Exception('User or Code Incorrect');
             } else {
                 $token = $code->createToken($user->user_name . "_token")->plainTextToken;
