@@ -22,10 +22,10 @@ class ChoiceController extends Controller
         try {
             $question_id = Question::where('uuid', $choice_id)->first();
             $choices = ChoiceResource::collection($question_id->choices()->get());
-            return $this->successResponce($choices, 'all choices', 200);
+            return $this->successResponse($choices, 'all choices', 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponse("Error." . $th->getMessage(), 500);
+            return $this->errorResponce("Error." . $th->getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ class ChoiceController extends Controller
             return $this->successResponse($question->choices()->get(), 'choice created successfuly', 201);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponse("Error." . $th->getMessage());
+            return $this->errorResponce("Error." . $th->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class ChoiceController extends Controller
             return $this->successResponse($choice, 'choice update successfuly', 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->errorResponce("Error." . $th->getMessage());
+            return $this->errorResponse("Error." . $th->getMessage());
         }
     }
 

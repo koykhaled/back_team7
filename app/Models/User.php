@@ -69,4 +69,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Question::class, 'importants', 'user_id');
     }
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
 }

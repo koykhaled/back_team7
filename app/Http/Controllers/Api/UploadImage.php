@@ -33,6 +33,7 @@ trait UploadImage
                 // file_put_contents($file_full_name, $photo64);
 
                 $data->$input = $file_full_name;
+
             }
         } catch (\Throwable $th) {
             return $th->getMessage();
