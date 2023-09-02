@@ -6,6 +6,7 @@ use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -17,15 +18,15 @@ class ReportController extends Controller
     public function index($id)
     {
         //
-       
+
         try {
-          //  $user = auth()->user();
-          
-            $user=User::where('uuid',$id)->first();
-        $reports = ReportResource::collection($user->reports()->get());
-        return $this->successResponse($reports , 'all reports' , 200);
+            $code = Auth::user();
+
+            $user = User::where('uuid', $code->user_id)->first();
+            $reports = ReportResource::collection($user->reports()->get());
+            return $this->successResponse($reports, 'all reports', 200);
         } catch (\Throwable $th) {
-           
+
             return $this->errorResponse("Error." . $th->getMessage());
         }
     }
@@ -36,20 +37,20 @@ class ReportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request , $id)
+    public function store(Request $request, $id)
     {
         //
-        try{
-        $user=User::where('uuid',$id)->first();
-        $report= $user->reports()->create([
-    
-            'content'=> $request->content
-        ]);
-        return $this->successResponse($report, 'choice created successfuly', 201);
-    } catch (\Throwable $th) {
-        //throw $th;
-        return $this->errorResponse("Error." . $th->getMessage());
-    }
+        try {
+            $user = User::where('uuid', $id)->first();
+            $report = $user->reports()->create([
+
+                'content' => $request->content
+            ]);
+            return $this->successResponse($report, 'choice created successfuly', 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->errorResponse("Error." . $th->getMessage());
+        }
     }
 
     /**
@@ -84,13 +85,13 @@ class ReportController extends Controller
     public function destroy($id)
     {
         //
-        try{
-        $report= Report::where('uuid' , $id)->first();
-        $report->delete();
-        return $this->successResponse(null, 'deleted successfuly', 200);
-    } catch (\Throwable $th) {
-        //throw $th;
-        return $this->errorResponse("Error." . $th->getMessage());
-    }
+        try {
+            $report = Report::where('uuid', $id)->first();
+            $report->delete();
+            return $this->successResponse(null, 'deleted successfuly', 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->errorResponse("Error." . $th->getMessage());
+        }
     }
 }

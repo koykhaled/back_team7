@@ -68,15 +68,3 @@ class SubjectController extends Controller
         }
     }
 }
-
-
-function chooseUniqueItems($array, $numItems)
-{
-    $uniqueItems = array_unique($array);
-    shuffle($uniqueItems);
-    return array_slice($uniqueItems, 0, $numItems);
-}
-
-// Example usage
-$items = array("apple", "banana", "orange", "kiwi", "grape", "strawberry", "mango");
-$chosenItems = chooseUniqueItems($items, 3);

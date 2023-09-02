@@ -17,7 +17,8 @@ class ChoiceResource extends JsonResource
         //return parent::toArray($request);
         return [
             'id' => $this->uuid,
-            'content' => $this->content
+            'content' => $this->content,
+            'status' => $this->pivot->status,
         ];
     }
 }

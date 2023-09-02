@@ -13,7 +13,6 @@ class Choice extends Model
 
     protected $fillable = [
         'content',
-        'uuid'
     ];
 
     protected static function boot()
@@ -27,6 +26,6 @@ class Choice extends Model
 
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'question_choices', 'choice_id');
+        return $this->belongsToMany(Question::class, 'question_choices', 'choice_id')->withPivot('status');
     }
 }

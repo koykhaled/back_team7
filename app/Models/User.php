@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -24,8 +25,6 @@ class User extends Authenticatable
     protected $fillable = [
         'user_name',
         'phone',
-        'role',
-        'college_id'
     ];
 
     /**
@@ -56,7 +55,7 @@ class User extends Authenticatable
         });
     }
 
-    public function code(): HasMany
+    public function codes(): HasMany
     {
         return $this->hasMany(Code::class);
     }
@@ -70,7 +69,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Question::class, 'importants', 'user_id');
     }
-    public function reports(){
+    public function reports()
+    {
         return $this->hasMany(Report::class);
     }
 }

@@ -28,9 +28,9 @@ trait UploadImage
                 $photo64 = base64_encode($file_contents);
                 $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
                 $path = 'photo/' . $folder_name;
-                $file_full_name = $path . $file_name;
+                $file_full_name = asset($path . $file_name);
                 $file->move($path, $file_name);
-                file_put_contents($file_full_name, $photo64);
+                // file_put_contents($file_full_name, $photo64);
 
                 $data->$input = $file_full_name;
 
@@ -45,7 +45,7 @@ trait UploadImage
 
         if (File::exists($file_name)) {
             File::delete($file_name);
-            return true;
+            return;
         } else {
             return false;
         }

@@ -27,7 +27,6 @@ class AuthController extends Controller
                     $user = User::create([
                         'user_name' => $request->user_name,
                         'phone' => $request->phone,
-                        'role' => 'student',
                     ]);
                     $data['id'] = $user->uuid;
                     $data['name'] = $user->user_name;
@@ -49,18 +48,21 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            $user = User::where('user_name', $request->user_name)->first();
             $code = Code::where('code', $request->code)->first();
+            $user = User::where('id', $code->user_id)->first();
 
-            if (!$code or !$user) {
+            if (!$code or ($user->user_name != $request->user_name)) {
                 throw new Exception('User or Code Incorrect');
             } else {
                 $token = $code->createToken($user->user_name . "_token")->plainTextToken;
                 $college = College::find($code->college_id);
-                $success['token'] = $token;
+                $success['id'] = $user->uuid;
                 $success['user_name'] = $user->user_name;
+                $success['phone'] = $user->phone;
+                $success['photo'] = $user->photo;
                 $success['college_name'] = $college->name;
                 $success['college_id'] = $college->uuid;
+                $success['token'] = $token;
                 return $this->successResponse($success, 'login success', 200);
             }
         } catch (\Throwable $e) {

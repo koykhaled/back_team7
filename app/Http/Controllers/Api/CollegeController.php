@@ -64,7 +64,7 @@ class CollegeController extends Controller
     {
         try {
             $college = College::where('uuid', $uuid)->first();
-            $college->name = $request->name ?? $college->name;
+            // $college->name = $request->name ?? $college->name;
             $this->deletePhoto($college->logo);
             $this->uploadImage($request, 'logo', $college, 'CollegeLogo/');
             $college->save();
