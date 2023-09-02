@@ -41,9 +41,14 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
-    Route::post('profile/{user_id}', [ProfileController::class, 'update'])->name('profile.updaet');
-    Route::get('profile/{user_id}', [ProfileController::class, 'userInfo'])->name('profile.user');
 });
+/*
+|--------------------------------------------------------------------------
+| profiel Routes
+|--------------------------------------------------------------------------
+*/
+Route::post('auth/profile/{user_id}', [ProfileController::class, 'update'])->name('profile.updaet');
+Route::get('auth/profile/{user_id}', [ProfileController::class, 'userInfo'])->name('profile.user');
 
 
 /*
@@ -51,10 +56,7 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function () {
 | Colleges Routes
 |--------------------------------------------------------------------------
 */
-Route::get('colleges/{id}', [CollegeController::class, 'index'])->name('college.index');
-Route::post('colleges/{id}', [CollegeController::class, 'store'])->name('college.store');
-Route::post('colleges/{id}', [CollegeController::class, 'update'])->name('college.update');
-
+Route::get('colleges/', [CollegeController::class, 'index'])->name('college.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +70,8 @@ Route::get('categories', [CategoryController::class, 'index'])->name('categories
 | Subjects Routes
 |--------------------------------------------------------------------------
 */
-
+Route::group(['middleware' => 'auth:sanctum'], function () {
+});
 Route::get('subjects/{college_id}', [SubjectController::class, 'index'])->name('subject.index');
 
 
@@ -78,13 +81,14 @@ Route::get('subjects/{college_id}', [SubjectController::class, 'index'])->name('
 | Terms Routes
 |--------------------------------------------------------------------------
 */
-Route::get('terms/{college_id}', [TermController::class, 'index'])->name('subject.index');
+Route::get('terms/{college_id}', [TermController::class, 'index'])->name('terms.index');
 
 /*
 |--------------------------------------------------------------------------
 | Questions Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('questions/{id}', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('questions-answers/', [QuestionController::class, 'correctQuestions'])->name('questions.answres');
 Route::get('subject-questions/{id}', [QuestionController::class, 'subjectQuestions'])->name('questions.subject.term');
@@ -95,22 +99,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('important-questions', [ImportantQuestionController::class, 'destroy'])->name('importants.delete');
 });
 Route::post('questions/{subject_id}', [QuestionController::class, 'store'])->name('questions.store');
-Route::delete('questions/{id}', [QuestionController::class, 'destroy'])->name('questions.delete');
 
 
-/*
-|--------------------------------------------------------------------------
-| Choices Routes
-|--------------------------------------------------------------------------
-*/
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('choices/', [ChoiceController::class, 'index'])->name('questions.index');
-});
-Route::post('choices/{question_id}', [ChoiceController::class, 'store'])->name('questions.store');
-Route::delete('choices/{id}', [ChoiceController::class, 'destroy'])->name('questions.delete');
 
-
-/*
+/*terms
 |--------------------------------------------------------------------------
 | Slider Routes
 |--------------------------------------------------------------------------
@@ -118,8 +110,7 @@ Route::delete('choices/{id}', [ChoiceController::class, 'destroy'])->name('quest
 Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 Route::get('sliders/', [SliderController::class, 'index'])->name('questions.index');
-Route::post('sliders/', [SliderController::class, 'store'])->name('questions.store');
-Route::delete('sliders/{id}', [SliderController::class, 'destroy'])->name('questions.delete');
+
 
 
 
@@ -167,8 +158,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
         'terms/{college_id}',
         [TermController::class, 'index']
     )->name('subject.index');
-    Route::post('terms/{college_id}', [TermController::class, 'store'])->name('subject.store');
-    Route::delete('terms/{id}', [TermController::class, 'destroy'])->name('subject.delete');
+    Route::post('terms/{college_id}', [TermController::class, 'store'])->name('terms.store');
+    Route::delete('terms/{id}', [TermController::class, 'destroy'])->name('terms.delete');
 
 
 
@@ -186,8 +177,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::post('choices/{question_id}', [ChoiceController::class, 'store'])->name('questions.store');
-    Route::delete('choices/{id}', [ChoiceController::class, 'destroy'])->name('questions.delete');
+    Route::post('choices/{question_id}', [ChoiceController::class, 'store'])->name('choices.store');
+    Route::delete('choices/{id}', [ChoiceController::class, 'destroy'])->name('choices.delete');
 
 
 
@@ -196,7 +187,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
     | Slider Routes
     |--------------------------------------------------------------------------
     */
-    Route::post('sliders/', [SliderController::class, 'store'])->name('questions.store');
-    Route::delete('sliders/{id}', [SliderController::class, 'destroy'])->name('questions.delete');
+    Route::post('sliders/', [SliderController::class, 'store'])->name('sliders.store');
+    Route::delete('sliders/{id}', [SliderController::class, 'destroy'])->name('sliders.delete');
 });
-Route::get('sliders/', [SliderController::class, 'index'])->name('questions.index');
+// Route::get('sliders/', [SliderController::class, 'index'])->name('questions.index');

@@ -13,7 +13,6 @@ class Choice extends Model
 
     protected $fillable = [
         'content',
-        'uuid'
     ];
 
     protected static function boot()

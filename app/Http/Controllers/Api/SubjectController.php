@@ -7,6 +7,7 @@ use App\Http\Requests\SubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Models\College;
 use App\Models\Subject;
+use Illuminate\Support\Arr;
 
 class SubjectController extends Controller
 {
@@ -25,6 +26,9 @@ class SubjectController extends Controller
         } catch (\Throwable $th) {
             return $this->errorResponse("Error . " . $th->getMessage(), 400);
         }
+        // // $questionIds = Subject::pluck('id')->toArray();
+        // // $randomQuestionIds = Arr::random($questionIds, 3);
+        // $questions = Subject::inRandomOrder()->limit(2)->get();
     }
 
     /**
@@ -64,15 +68,3 @@ class SubjectController extends Controller
         }
     }
 }
-
-
-function chooseUniqueItems($array, $numItems)
-{
-    $uniqueItems = array_unique($array);
-    shuffle($uniqueItems);
-    return array_slice($uniqueItems, 0, $numItems);
-}
-
-// Example usage
-$items = array("apple", "banana", "orange", "kiwi", "grape", "strawberry", "mango");
-$chosenItems = chooseUniqueItems($items, 3);

@@ -40,7 +40,7 @@ class ImportantQuestionController extends Controller
             $user_id = Auth::user()->user_id;
             $user = User::find($user_id);
             $question = Question::where('uuid', $request->question_id)->first();
-            if ($user->questions()->where(' ', $question->id)->get()) {
+            if ($user->questions()->where('question_id', $question->id)->get()) {
                 throw new Exception("Question Already exist in your importants");
             }
             $user->questions()->attach($question->id);

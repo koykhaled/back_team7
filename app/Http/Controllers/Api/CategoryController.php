@@ -41,7 +41,7 @@ class CategoryController extends Controller
             $category->name = $request->name;
             $this->uploadImage($request, 'logo', $category, 'CategoryLogo/');
             $category->save();
-            return $this->successResponse("category created successfuly!", 201);
+            return $this->successResponse($category, "category created successfuly!", 201);
         } catch (\Exception $e) {
             return $this->errorResponse("ERROR. " . $e->getMessage(), 500);
         }
@@ -55,7 +55,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, $uuid)
+    public function update(Request $request, $uuid)
     {
         try {
             $category = Category::where('uuid', $uuid)->fisrt();
