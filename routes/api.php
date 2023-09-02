@@ -154,10 +154,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
     | Terms Routes
     |--------------------------------------------------------------------------
     */
-    Route::get(
-        'terms/{college_id}',
-        [TermController::class, 'index']
-    )->name('subject.index');
     Route::post('terms/{college_id}', [TermController::class, 'store'])->name('terms.store');
     Route::delete('terms/{id}', [TermController::class, 'destroy'])->name('terms.delete');
 
