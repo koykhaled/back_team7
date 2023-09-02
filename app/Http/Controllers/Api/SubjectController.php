@@ -26,9 +26,6 @@ class SubjectController extends Controller
         } catch (\Throwable $th) {
             return $this->errorResponse("Error . " . $th->getMessage(), 400);
         }
-        // // $questionIds = Subject::pluck('id')->toArray();
-        // // $randomQuestionIds = Arr::random($questionIds, 3);
-        // $questions = Subject::inRandomOrder()->limit(2)->get();
     }
 
     /**

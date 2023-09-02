@@ -21,8 +21,10 @@ class ProfileController extends Controller
     {
         try {
             // $user_id = Auth::user()->user_id;
-            $user = User::where('id', $user_id)->first();
-            return $this->successResponse(new ProfileResource($user), 'user found', 200);
+            $user = User::where('uuid', $user_id)->first();
+            if ($user) {
+                return $this->successResponse(new ProfileResource($user), 'user found', 200);
+            }
         } catch (\Throwable $th) {
             return $this->errorResponse("Error . " . $th->getMessage(), 500);
         }
@@ -32,7 +34,7 @@ class ProfileController extends Controller
     {
         try {
             // $user_id = Auth::user()->user_id;
-            $user = User::where('id', $user_id)->first();
+            $user = User::where('uuid', $user_id)->first();
             $users = User::all();
             foreach ($users as $u) {
                 if ($u->phone === $request->phone) {
@@ -52,7 +54,8 @@ class ProfileController extends Controller
                     200
                 );
             } else {
-                return $this->errorResponse('User Not Found', 404);
+                // return $this->errorResponse('', 404);
+                throw new Exception('User Not Found');
             }
         } catch (\Throwable $th) {
             return $this->errorResponse("Error . " . $th->getMessage(), 500);
