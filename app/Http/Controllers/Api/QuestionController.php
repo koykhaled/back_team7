@@ -114,33 +114,37 @@ class QuestionController extends Controller
 
     public function correctQuestions(Request $request)
     {
-        static $correct_questions = 0;
-        static $incorrect_questions = 0;
-        $collectoin = array();
-        $correct = array();
-        $incorrect = array();
-        $q = $request->questions_answres;
-        foreach ($q as $question) {
-            $qu = Question::where('uuid', $question['question_id'])->first();
-            $c = $qu->choices()->where('uuid', $question['choice_id'])->first();
-            if ($c->pivot->status == 1) {
-                $correct_questions += 1;
-                $correct[] = new QuestionResource($qu);
-            } else {
-                $incorrect_questions += 1;
-                $incorrect[] = new QuestionResource($qu);
+        try {
+            static $correct_questions = 0;
+            static $incorrect_questions = 0;
+            $collectoin = array();
+            $correct = array();
+            $incorrect = array();
+            $q = $request->questions_answres;
+            foreach ($q as $question) {
+                $qu = Question::where('uuid', $question['question_id'])->first();
+                $c = $qu->choices()->where('uuid', $question['choice_id'])->first();
+                if ($c->pivot->status == 1) {
+                    $correct_questions += 1;
+                    $correct[] = new QuestionResource($qu);
+                } else {
+                    $incorrect_questions += 1;
+                    $incorrect[] = new QuestionResource($qu);
+                }
+                $subject = Subject::find($qu->subject_id);
+                $choices = $qu->choices()->inRandomOrder()->get();
+                $qu['subject_name'] = $subject->name;
+                $qu['choices'] = $choices;
+                foreach ($qu['choices'] as $choice) {
+                }
             }
-            $subject = Subject::find($qu->subject_id);
-            $choices = $qu->choices()->inRandomOrder()->get();
-            $qu['subject_name'] = $subject->name;
-            $qu['choices'] = $choices;
-            foreach ($qu['choices'] as $choice) {
-            }
+            $collectoin['correct_questions'] = $correct;
+            $collectoin['correct_questions_count'] = $correct_questions;
+            $collectoin['incorrect_questions'] = $incorrect;
+            $collectoin['incorrect_questions_count'] = $incorrect_questions;
+            return $this->successResponse($collectoin, 'answres', 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse("Error => " . $th->getMessage(), 500);
         }
-        $collectoin['correct_questions'] = $correct;
-        $collectoin['correct_questions_count'] = $correct_questions;
-        $collectoin['incorrect_questions'] = $incorrect;
-        $collectoin['incorrect_questions_count'] = $incorrect_questions;
-        return $this->successResponse($collectoin, 'answres', 200);
     }
 }
